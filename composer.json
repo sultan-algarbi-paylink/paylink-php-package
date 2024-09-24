@@ -1,6 +1,6 @@
 {
-  "name": "paylinksa/laravel",
-  "description": "Paylink package for integrating with Paylink gateway.",
+  "name": "paylinksa/php",
+  "description": "PHP package for integrating with Paylink payment gateway services.",
   "keywords": [
     "paylink",
     "sdk",
@@ -8,7 +8,8 @@
     "integration",
     "api",
     "payment gateway",
-    "payment"
+    "payment",
+    "php"
   ],
   "type": "library",
   "license": "MIT",
@@ -23,5 +24,5 @@
       "Paylink\\": "src/"
     }
   },
-  "version": "2.0.1"
+  "version": "1.0.0"
 }
