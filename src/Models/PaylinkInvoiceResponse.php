@@ -2,8 +2,6 @@
 
 namespace Paylink\Models;
 
-use Illuminate\Support\Collection;
-
 class PaylinkInvoiceResponse
 {
     public PaylinkGatewayOrderRequest $gatewayOrderRequest;
@@ -33,9 +31,9 @@ class PaylinkInvoiceResponse
         string $checkUrl,
         bool $success,
         bool $digitalOrder,
-        $foreignCurrencyRate,
-        $paymentReceipt,
-        $metadata
+        $foreignCurrencyRate = null,
+        $paymentReceipt = null,
+        $metadata = null
     ) {
         $this->gatewayOrderRequest = $gatewayOrderRequest;
         $this->amount = $amount;

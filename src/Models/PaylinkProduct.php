@@ -14,14 +14,14 @@ class PaylinkProduct
     protected ?float $productCost;
 
     public function __construct(
-        $title,
-        $price,
-        $qty,
-        $description = null,
-        $isDigital = false,
-        $imageSrc = null,
-        $specificVat = null,
-        $productCost = null
+        string $title,
+        float $price,
+        int $qty,
+        ?string $description = null,
+        bool $isDigital = false,
+        ?string $imageSrc = null,
+        ?float $specificVat = null,
+        ?float $productCost = null
     ) {
         $this->title = $title;
         $this->price = $price;
@@ -38,7 +38,7 @@ class PaylinkProduct
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'title' => $this->title,

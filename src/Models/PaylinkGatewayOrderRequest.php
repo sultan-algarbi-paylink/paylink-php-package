@@ -35,9 +35,9 @@ class PaylinkGatewayOrderRequest
         string $currency,
         string $smsMessage,
         bool $displayPending,
-        $receivers,
-        $partnerPortion,
-        $metadata
+        $receivers = null,
+        $partnerPortion = null,
+        $metadata = null
     ) {
         $this->amount = $amount;
         $this->orderNumber = $orderNumber;
