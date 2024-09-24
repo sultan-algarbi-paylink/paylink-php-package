@@ -1,12 +1,12 @@
 <?php
 
-namespace Paylink\Services;
+namespace Paylink;
 
 use Exception;
 use Paylink\Models\PaylinkProduct;
 use Paylink\Models\PaylinkInvoiceResponse;
 
-class PaylinkService
+class Paylink
 {
     // API URLs for production and test environments
     private const PRODUCTION_API_URL = 'https://restapi.paylink.sa';
@@ -32,7 +32,7 @@ class PaylinkService
     private ?string $idToken;
 
     /**
-     * PaylinkService constructor.
+     * Paylink constructor.
      *
      * @param string $environment
      * @param string|null $apiId
@@ -331,7 +331,7 @@ class PaylinkService
     private function handleResponseError(array $responseData, int $statusCode, string $defaultErrorMsg)
     {
         // Try to extract error details from the response data
-        $errorMsg = $responseData['detail'] ?? $responseData['title'] ?? $responseData['error'] ?? '';
+        $errorMsg = $responseData['detail'] ?? $responseData['title'] ?? $responseData['error'] ?? json_encode($responseData);
 
         if (empty($errorMsg)) {
             $errorMsg = $defaultErrorMsg;
@@ -367,7 +367,7 @@ class PaylinkService
         } elseif ($method === 'GET') {
             curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
         } else {
-            throw new Exception("Invalid HTTP method: {$method}");
+            throw new Exception("Invalid HTTP method: {$method}", 405);
         }
 
         $response = curl_exec($curl);
