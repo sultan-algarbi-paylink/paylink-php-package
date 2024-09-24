@@ -1,5 +1,7 @@
 <?php
 
+require 'vendor/autoload.php';
+
 // Import Paylink Package
 use Paylink\Paylink;
 use Paylink\Models\PaylinkProduct;
@@ -7,6 +9,8 @@ use Paylink\Models\PaylinkProduct;
 function addInvoice()
 {
     try {
+        echo nl2br("\n==================== Add Invoice ====================\n");
+
         // Create an instance of Paylink
         $paylink = Paylink::test();
         // $paylink = Paylink::production('API_ID_xxxxxxxxxx', 'SECRET_KEY_xxxxxxxxxx');
@@ -47,53 +51,54 @@ function addInvoice()
             displayPending: true, // optional
         );
 
-        echo $invoiceDetails->orderStatus;
-        echo $invoiceDetails->transactionNo;
-        echo $invoiceDetails->url;
+        echo nl2br("orderStatus: {$invoiceDetails->orderStatus}\n");
+        echo nl2br("transactionNo: {$invoiceDetails->transactionNo}\n");
+        echo nl2br("payment url: {$invoiceDetails->url}\n");
         // ...
 
     } catch (Exception $e) {
-        // -- Handle the error
+        echo $e->getMessage();
     }
 }
 
 function getInvoice()
 {
     try {
+        echo nl2br("\n==================== Get Invoice ====================\n");
+
         // Create an instance of Paylink
         $paylink = Paylink::production('API_ID_xxxxxxxxxx', 'SECRET_KEY_xxxxxxxxxx');
 
         // Call Paylink to get the invoice
         $invoiceDetails = $paylink->getInvoice(transactionNo: '1714289084591');
 
-        echo $invoiceDetails->orderStatus;
-        echo $invoiceDetails->transactionNo;
-        echo $invoiceDetails->url;
+        echo nl2br("orderStatus: {$invoiceDetails->orderStatus}\n");
+        echo nl2br("transactionNo: {$invoiceDetails->transactionNo}\n");
+        echo nl2br("payment url: {$invoiceDetails->url}\n");
         // ...
 
     } catch (Exception $e) {
-        // -- Handle the error
+        echo $e->getMessage();
     }
 }
 
 function cancelInvoice()
 {
     try {
+        echo nl2br("\n==================== Cancel Invoice ====================\n");
         // Create an instance of Paylink
         $paylink = Paylink::test();
 
         // Call Paylink to cancel the invoice
-        $deleted = $paylink->cancelInvoice(
-            transactionNo: '1714289084591'
-        );
+        $deleted = $paylink->cancelInvoice(transactionNo: '1714289084591');
 
         // -- If no error exception is thrown, the invoice was canceled successfully
-        if ($deleted) {
-            return 'Invoice canceled successfully';
-        } else {
-            return 'Failed to cancel invoice';
-        }
+        echo $deleted ? 'Invoice canceled successfully' : 'Failed to cancel invoice';
     } catch (Exception $e) {
-        // -- Handle the error
+        echo $e->getMessage();
     }
 }
+
+addInvoice();
+getInvoice();
+cancelInvoice();

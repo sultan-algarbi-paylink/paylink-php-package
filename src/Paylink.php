@@ -89,8 +89,8 @@ class Paylink
 
             // Request headers
             $requestHeaders = [
-                'Accept' => 'application/json',
-                'Content-Type' => 'application/json',
+                'Accept: application/json',
+                'Content-Type: application/json',
             ];
 
             // Request body parameters
@@ -186,9 +186,9 @@ class Paylink
 
             // Request headers
             $requestHeaders = [
-                'Accept' => 'application/json',
-                'Content-Type' => 'application/json',
-                'Authorization' => "Bearer {$this->idToken}",
+                'Accept: application/json',
+                'Content-Type: application/json',
+                "Authorization: Bearer {$this->idToken}",
             ];
 
             // Request body parameters
@@ -248,9 +248,9 @@ class Paylink
 
             // Request headers
             $requestHeaders = [
-                'Accept' => 'application/json',
-                'Content-Type' => 'application/json',
-                'Authorization' => "Bearer {$this->idToken}",
+                'Accept: application/json',
+                'Content-Type: application/json',
+                "Authorization: Bearer {$this->idToken}",
             ];
 
             // Send a GET request to the server
@@ -294,9 +294,9 @@ class Paylink
 
             // Request headers
             $requestHeaders = [
-                'Accept' => 'application/json',
-                'Content-Type' => 'application/json',
-                'Authorization' => "Bearer {$this->idToken}",
+                'Accept: application/json',
+                'Content-Type: application/json',
+                "Authorization: Bearer {$this->idToken}",
             ];
 
             // Request body parameters
@@ -313,7 +313,7 @@ class Paylink
                 'Failed to cancel the invoice'
             );
 
-            return $response['success'] === 'true';
+            return !empty($response['success']) && $response['success'] === 'true';
         } catch (Exception $e) {
             throw $e; // Re-throw the exception for higher-level handling
         }
@@ -359,7 +359,7 @@ class Paylink
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, json_encode($headers));
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
 
         if ($method === 'POST') {
             curl_setopt($curl, CURLOPT_POST, true);
@@ -372,16 +372,28 @@ class Paylink
 
         $response = curl_exec($curl);
 
-        if (curl_errno($curl)) {
+        // Check for cURL errors
+        if (curl_errno($curl) !== 0) {
+            curl_close($curl);
+            throw new Exception("cURL Error: " . curl_error($curl));
+        }
+
+        // Get the HTTP status code
+        $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+        // Close the cURL session
+        curl_close($curl);
+
+        // Check if the response contains an HTTP error status code
+        if ($httpCode >= 400 && $httpCode < 600) {
             $this->handleResponseError(
                 json_decode($response, true),
-                curl_getinfo($curl, CURLINFO_HTTP_CODE),
+                $httpCode,
                 $defaultErrorMsg
             );
         }
 
-        curl_close($curl);
-
+        // Return the response as an array (assuming the API returns JSON)
         return json_decode($response, true);
     }
 
